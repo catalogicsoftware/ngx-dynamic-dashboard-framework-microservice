@@ -1,0 +1,51 @@
+[
+  {
+    "heading": "",
+    "summary": "",
+    "details": [
+      {
+        "category": "Application A Enhancements",
+        "articles": [
+          {
+            "headline": "Automated Seeding for Always On",
+            "description": "Enables automated seeding of your Application A AlwaysON availability group by leveraging Storage snapshot technology to minimize the data movement between primary and secondary replica.",
+            "benefit": "Automatically and efficiently initialize AlwaysOn availability group.",
+            "id": "id string",
+            "date": "09/10/2017"
+          }
+        ]
+      },
+      {
+        "category": "Application B Enhancements",
+        "articles": [
+          {
+            "headline": "Application B support",
+            "description": "Introduces CDM support for Application B. Single tenant configuration can now be automatically protected using storage snapshot.",
+            "benefit": "Protect your latest version of Application B using Product Copy Data Management",
+            "id": "id string",
+            "date": "09/10/2017"
+          },
+          {
+            "headline": "Recovery improvements",
+            "description": "Product now enables Instant recovery of Application B database to original location from the UI portal.",
+            "benefit": "Flexible recovery options",
+            "id": "id string",
+            "date": "09/10/2017"
+          }
+        ]
+      },
+      {
+        "category": "Application C support",
+        "articles": [
+          {
+            "headline": "Application C support",
+            "description": "Product now supports Application C configurations running 9 and above.",
+            "benefit": "Automatically and efficiently initialize AlwaysOn availability group.",
+            "id": "id string",
+            "date": "09/10/2017"
+          }
+        ]
+      }
+    ]
+  }
+]
