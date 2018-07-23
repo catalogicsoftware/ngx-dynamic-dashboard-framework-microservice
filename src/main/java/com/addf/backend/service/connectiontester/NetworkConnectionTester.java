@@ -1,0 +1,119 @@
+package com.addf.backend.service.connectiontester;
+import com.addf.backend.service.knowledgebase.KB;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import reactor.core.publisher.FluxSink;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.List;
+
+public class NetworkConnectionTester {
+
+    private static String SUCCESS = "success";
+    private static String TIMEOUTERROR = "time-out";
+    private static String REFUSEERROR = "connection-refuse";
+    private static String UNKNOWNERROR = "unknown-host";
+    private static String ROUTEERROR = "no-route";
+    private static String UNDETERMINEDERROR = "undetermined";
+
+    private static int CONNECTION_TIMEOUT = 10000;
+
+    private NetworkConnectionTester() {
+    }
+
+    public static void testConnection(FluxSink<ResponseObject> sink,  List<RequestObject> requestData) {
+
+        NetworkTestRunnable tester = new NetworkTestRunnable(sink, requestData);
+        Thread t = new Thread(tester);
+        t.start();
+
+    }
+
+    public static class NetworkTestRunnable implements Runnable {
+
+        FluxSink<ResponseObject> sink;
+        List<RequestObject> requestData;
+
+        NetworkTestRunnable(FluxSink<ResponseObject> sink, List<RequestObject> requestData) {
+            this.sink = sink;
+            this.requestData = requestData;
+
+        }
+
+        public void run() {
+
+            for (RequestObject endPoint  : this.requestData) {
+
+                sink.next(testEndPoint(endPoint));
+            }
+            sink.complete();
+
+        }
+
+        private ResponseObject testEndPoint(RequestObject endPoint){
+
+            String result;
+            String exceptionString = "";
+            int _port = Integer.parseInt(endPoint.getPort().trim());
+            try (Socket socket = new Socket()) {
+
+                SocketAddress socketAddress = new InetSocketAddress(endPoint.getHost(), _port);
+                socket.connect(socketAddress, CONNECTION_TIMEOUT);
+                result = SUCCESS;
+
+
+            } catch (Exception e) {
+                exceptionString = e.toString();
+                result = getProcessedResult(exceptionString);
+            }
+
+            return new ResponseObject(result, exceptionString, endPoint, getKnowledgeBaseArticle(result));
+
+        }
+
+        private String getProcessedResult(String exception) {
+
+            exception = exception.toLowerCase();
+
+            if (exception.contains("success")) {
+                return SUCCESS;
+            } else if (exception.contains("time")) {
+                return TIMEOUTERROR;
+            } else if (exception.contains("refuse")) {
+                return REFUSEERROR;
+            } else if (exception.contains("unknown")) {
+                return UNKNOWNERROR;
+            } else if (exception.contains("route")) {
+                return ROUTEERROR;
+            }
+            return UNDETERMINEDERROR;
+        }
+
+        private KB getKnowledgeBaseArticle(String result){
+
+            //get knowledge base articles from a file
+            ObjectMapper mapper = new ObjectMapper();
+            TypeReference<List<KB>> typeReference = new TypeReference<List<KB>>(){};
+            InputStream inputStream = TypeReference.class.getResourceAsStream("/static/assets/api/connection-model.json");
+            try {
+                List<KB> kbs = mapper.readValue(inputStream,typeReference);
+
+                for(KB kb: kbs){
+
+                    if(kb.getEvent().contains(result)){
+                        return kb;
+                    }
+                }
+            } catch (IOException e){
+                System.out.println("Unable to load kbs: " + e.getMessage());
+            }
+
+            return null;
+        }
+
+    }
+}

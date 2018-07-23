@@ -5,14 +5,11 @@ import com.ibm.watson.developer_cloud.natural_language_classifier.v1.NaturalLang
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Classification;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import com.addf.backend.service.connectiontester.*;
 
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +25,10 @@ public class DashboardService {
 
     @CrossOrigin
     @RequestMapping("/classify")
-    Classification processWatson(@RequestParam(value = "userid", defaultValue = "data") String userid,
-                                 @RequestParam(value = "password", defaultValue = "data") String password,
-                                 @RequestParam(value = "classifier_id", defaultValue = "data") String classifierId,
-                                 @RequestParam(value = "data", defaultValue = "data") String data) {
+    public Classification processWatson(@RequestParam(value = "userid", defaultValue = "data") String userid,
+                                        @RequestParam(value = "password", defaultValue = "data") String password,
+                                        @RequestParam(value = "classifier_id", defaultValue = "data") String classifierId,
+                                        @RequestParam(value = "data", defaultValue = "data") String data) {
 
         NaturalLanguageClassifier service = new NaturalLanguageClassifier();
         service.setUsernameAndPassword(userid, password);
@@ -42,35 +39,26 @@ public class DashboardService {
 
 
     @CrossOrigin
-    @RequestMapping("/connectTest")
-    ResponseObject processConnectionTest(@RequestParam(value = "host") String host,
-                                         @RequestParam(value = "port") int port) {
+    @PostMapping(path = "/connectTest")
+    public Flux<ResponseObject> processConnectionTest(@RequestBody List<RequestObject> connectionTestRequest) {
 
-        // getDonutDetails();
-        String result = "";
-        try (Socket socket = new Socket();) {
+        Flux<ResponseObject> portTextFluxResults = Flux.create(sink -> {
+            NetworkConnectionTester.testConnection(sink,
+                    connectionTestRequest);
+        });
 
-            SocketAddress socketAddress = new InetSocketAddress(host, port);
-            socket.connect(socketAddress, 10000);
-            result = "successful";
-
-
-        } catch (Exception e) {
-            result = e.toString();
-        }
-
-        return new ResponseObject(result);
+        return portTextFluxResults;
     }
 
 
     @CrossOrigin
     @RequestMapping("/donutDetail")
-    ResponseObject getDonutDetails() {
+    public ResponseObject getDonutDetails() {
 
 
         Tag tag = new Tag("VM", "staging");
         List<Tag> tags = new ArrayList<>();
-        ResourceDetail resourceDetail = new ResourceDetail("0", "vm 1", "vm",  tags);
+        ResourceDetail resourceDetail = new ResourceDetail("0", "vm 1", "vm", tags);
         List<ResourceDetail> resourceDetailList = new ArrayList<>();
         tags.add(tag);
         resourceDetailList.add(resourceDetail);
@@ -113,10 +101,9 @@ public class DashboardService {
         resourceDetailList.add(resourceDetail);
 
 
-        Resource resource = new Resource("compliant", "" + resourceDetailList.size(),resourceDetailList );
+        Resource resource = new Resource("compliant", "" + resourceDetailList.size(), resourceDetailList);
         List<Resource> resourceList = new ArrayList<>();
         resourceList.add(resource);
-
 
 
         tag = new Tag("Site A", "department 2");
@@ -144,12 +131,9 @@ public class DashboardService {
         resourceDetailList.add(resourceDetail);
 
 
-
-        resource = new Resource("staging", "" + resourceDetailList.size(),resourceDetailList );
+        resource = new Resource("staging", "" + resourceDetailList.size(), resourceDetailList);
         resourceList = new ArrayList<>();
         resourceList.add(resource);
-
-
 
 
         tag = new Tag("Site A", "department 2");
@@ -165,11 +149,9 @@ public class DashboardService {
         resourceDetailList.add(resourceDetail);
 
 
-
-        resource = new Resource("non-compliant", "" + resourceDetailList.size(),resourceDetailList );
+        resource = new Resource("non-compliant", "" + resourceDetailList.size(), resourceDetailList);
         resourceList = new ArrayList<>();
         resourceList.add(resource);
-
 
 
         Gson g = new Gson();
@@ -178,29 +160,10 @@ public class DashboardService {
         System.out.println(g.toString());
 
 
-
         return null;
     }
 
 
-}
-
-
-class ResponseObject {
-
-    ResponseObject(String _data) {
-        setData(_data);
-    }
-
-    String data;
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }
 
 
