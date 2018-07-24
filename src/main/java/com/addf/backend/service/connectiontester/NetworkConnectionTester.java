@@ -1,5 +1,7 @@
 package com.addf.backend.service.connectiontester;
+
 import com.addf.backend.service.knowledgebase.KB;
+import com.addf.backend.service.knowledgebase.PortService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.FluxSink;
@@ -24,15 +26,13 @@ public class NetworkConnectionTester {
 
     private NetworkConnectionTester() {
     }
-
-    public static void testConnection(FluxSink<ResponseObject> sink,  List<RequestObject> requestData) {
+    public static void testConnection(FluxSink<ResponseObject> sink, List<RequestObject> requestData) {
 
         NetworkTestRunnable tester = new NetworkTestRunnable(sink, requestData);
         Thread t = new Thread(tester);
         t.start();
 
     }
-
     public static class NetworkTestRunnable implements Runnable {
 
         FluxSink<ResponseObject> sink;
@@ -46,7 +46,7 @@ public class NetworkConnectionTester {
 
         public void run() {
 
-            for (RequestObject endPoint  : this.requestData) {
+            for (RequestObject endPoint : this.requestData) {
 
                 sink.next(testEndPoint(endPoint));
             }
@@ -54,7 +54,7 @@ public class NetworkConnectionTester {
 
         }
 
-        private ResponseObject testEndPoint(RequestObject endPoint){
+        private ResponseObject testEndPoint(RequestObject endPoint) {
 
             String result;
             String exceptionString = "";
@@ -71,7 +71,7 @@ public class NetworkConnectionTester {
                 result = getProcessedResult(exceptionString);
             }
 
-            return new ResponseObject(result, exceptionString, endPoint, getKnowledgeBaseArticle(result));
+            return new ResponseObject(result, exceptionString, endPoint, getPortDescription(endPoint.getPort()), getKnowledgeBaseArticle(result));
 
         }
 
@@ -93,26 +93,62 @@ public class NetworkConnectionTester {
             return UNDETERMINEDERROR;
         }
 
-        private KB getKnowledgeBaseArticle(String result){
+        /**
+         * todo - move the file read code into an init method. No sense in doing this for every request
+         * @param result
+         * @return
+         */
+        private KB getKnowledgeBaseArticle(String result) {
 
             //get knowledge base articles from a file
             ObjectMapper mapper = new ObjectMapper();
-            TypeReference<List<KB>> typeReference = new TypeReference<List<KB>>(){};
+            TypeReference<List<KB>> kbTypeReference = new TypeReference<List<KB>>(){};
             InputStream inputStream = TypeReference.class.getResourceAsStream("/static/assets/api/connection-model.json");
             try {
-                List<KB> kbs = mapper.readValue(inputStream,typeReference);
+                List<KB> kbs = mapper.readValue(inputStream, kbTypeReference);
 
-                for(KB kb: kbs){
+                for (KB kb : kbs) {
 
-                    if(kb.getEvent().contains(result)){
+                    if (kb.getEvent().contains(result)) {
                         return kb;
                     }
                 }
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("Unable to load kbs: " + e.getMessage());
             }
 
             return null;
+        }
+
+
+        /**
+         * todo - move this file read code into an init method. No sense in doing this for every request
+         * @param port
+         * @return
+         */
+
+        private String getPortDescription(String port) {
+
+            //get knowledge base articles from a file
+            ObjectMapper mapper = new ObjectMapper();
+            TypeReference<List<PortService>> portTypeReference = new TypeReference<List<PortService>>() {
+            };
+            InputStream inputStream = TypeReference.class.getResourceAsStream("/static/assets/api/port-model.json");
+            try {
+                List<PortService> ports = mapper.readValue(inputStream, portTypeReference);
+
+                for (PortService _port : ports) {
+
+                    if (_port.getPortNumber().contains(port)) {
+                        return _port.getDescription();
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Unable to load kbs: " + e.getMessage());
+            }
+
+            return null;
+
         }
 
     }

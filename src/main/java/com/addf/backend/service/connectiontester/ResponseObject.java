@@ -4,10 +4,11 @@ import com.addf.backend.service.knowledgebase.KB;
 
 public class ResponseObject {
 
-    ResponseObject(String status, String exception,  RequestObject endPoint, KB knowledgeBaseArticle) {
+    ResponseObject(String status, String exception,  RequestObject endPoint, String portDescription,  KB knowledgeBaseArticle) {
         setStatus(status);
         setHost(endPoint.getHost());
         setPort(endPoint.getPort());
+        setPortDescription(portDescription);
         setKnowledgeBaseArticle(knowledgeBaseArticle);
         setException(exception);
     }
@@ -17,6 +18,16 @@ public class ResponseObject {
     private String port;
     private KB knowledgeBaseArticle;
     private String exception;
+
+    public String getPortDescription() {
+        return portDescription;
+    }
+
+    public void setPortDescription(String portDescription) {
+        this.portDescription = portDescription;
+    }
+
+    private String portDescription;
 
 
 
