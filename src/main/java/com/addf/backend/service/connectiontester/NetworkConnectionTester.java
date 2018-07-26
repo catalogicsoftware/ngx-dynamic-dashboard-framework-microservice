@@ -48,7 +48,9 @@ public class NetworkConnectionTester {
 
             for (RequestObject endPoint : this.requestData) {
 
-                sink.next(testEndPoint(endPoint));
+                ResponseObject response = testEndPoint(endPoint);
+
+                sink.next(response);
             }
             sink.complete();
 

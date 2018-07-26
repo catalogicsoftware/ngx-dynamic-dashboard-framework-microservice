@@ -256,6 +256,14 @@
                 "order": 1
               },
               {
+                "controlType": "hidden",
+                "key": "fport",
+                "label": "Port(s)",
+                "value": "",
+                "required": true,
+                "order": 1
+              },
+              {
                 "controlType": "dropdown",
                 "key": "port",
                 "label": "Port",
@@ -266,6 +274,10 @@
                   {
                     "key": "SPP (443)",
                     "value": "443"
+                  },
+                  {
+                    "key": "SPP (8443)",
+                    "value": "8443"
                   },
                   {
                     "key": "SPP (3000)",
