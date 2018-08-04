@@ -1,4 +1,4 @@
-package com.addf.backend.service.knowledgebase;
+package com.addf.gadgets.portconnection.knowledgebase;
 
 import java.util.List;
 
@@ -40,8 +40,6 @@ public class KB {
     public void setSolution(List<Solution> solution) {
         this.solution = solution;
     }
-
-
 
 
 }

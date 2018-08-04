@@ -1,4 +1,4 @@
-package com.addf.backend.service.knowledgebase;
+package com.addf.gadgets.portconnection.knowledgebase;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ public class Solution {
     public void setAction(List<Action> action) {
         this.action = action;
     }
-
 
 
 }

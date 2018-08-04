@@ -1,4 +1,4 @@
-package com.addf.backend.service.connectiontester;
+package com.addf.gadgets.portconnection.domain;
 
 public class RequestObject {
 

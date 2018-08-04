@@ -1,7 +1,9 @@
-package com.addf.backend.service.connectiontester;
+package com.addf.gadgets.portconnection.service;
 
-import com.addf.backend.service.knowledgebase.KB;
-import com.addf.backend.service.knowledgebase.PortService;
+import com.addf.gadgets.portconnection.domain.RequestObject;
+import com.addf.gadgets.portconnection.domain.ResponseObject;
+import com.addf.gadgets.portconnection.knowledgebase.KB;
+import com.addf.gadgets.portconnection.knowledgebase.PortService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.FluxSink;
@@ -22,26 +24,28 @@ public class NetworkConnectionTester {
     private static String ROUTEERROR = "no-route";
     private static String UNDETERMINEDERROR = "undetermined";
 
-    private static int CONNECTION_TIMEOUT = 10000;
 
     private NetworkConnectionTester() {
     }
-    public static void testConnection(FluxSink<ResponseObject> sink, List<RequestObject> requestData) {
 
-        NetworkTestRunnable tester = new NetworkTestRunnable(sink, requestData);
+    public static void testConnection(FluxSink<ResponseObject> sink, List<RequestObject> requestData, int connectionTimeout) {
+
+        NetworkTestRunnable tester = new NetworkTestRunnable(sink, requestData, connectionTimeout);
         Thread t = new Thread(tester);
         t.start();
 
     }
+
     public static class NetworkTestRunnable implements Runnable {
 
         FluxSink<ResponseObject> sink;
         List<RequestObject> requestData;
+        int connectionTimeout;
 
-        NetworkTestRunnable(FluxSink<ResponseObject> sink, List<RequestObject> requestData) {
+        NetworkTestRunnable(FluxSink<ResponseObject> sink, List<RequestObject> requestData, int connectionTimeout) {
             this.sink = sink;
             this.requestData = requestData;
-
+            this.connectionTimeout = connectionTimeout;
         }
 
         public void run() {
@@ -64,7 +68,7 @@ public class NetworkConnectionTester {
             try (Socket socket = new Socket()) {
 
                 SocketAddress socketAddress = new InetSocketAddress(endPoint.getHost(), _port);
-                socket.connect(socketAddress, CONNECTION_TIMEOUT);
+                socket.connect(socketAddress, this.connectionTimeout);
                 result = SUCCESS;
 
 
@@ -97,6 +101,7 @@ public class NetworkConnectionTester {
 
         /**
          * todo - move the file read code into an init method. No sense in doing this for every request
+         *
          * @param result
          * @return
          */
@@ -104,7 +109,8 @@ public class NetworkConnectionTester {
 
             //get knowledge base articles from a file
             ObjectMapper mapper = new ObjectMapper();
-            TypeReference<List<KB>> kbTypeReference = new TypeReference<List<KB>>(){};
+            TypeReference<List<KB>> kbTypeReference = new TypeReference<List<KB>>() {
+            };
             InputStream inputStream = TypeReference.class.getResourceAsStream("/static/assets/api/connection-model.json");
             try {
                 List<KB> kbs = mapper.readValue(inputStream, kbTypeReference);
@@ -125,6 +131,7 @@ public class NetworkConnectionTester {
 
         /**
          * todo - move this file read code into an init method. No sense in doing this for every request
+         *
          * @param port
          * @return
          */

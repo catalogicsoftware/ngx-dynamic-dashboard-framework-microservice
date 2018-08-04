@@ -1,10 +1,10 @@
-package com.addf.backend.service.connectiontester;
+package com.addf.gadgets.portconnection.domain;
 
-import com.addf.backend.service.knowledgebase.KB;
+import com.addf.gadgets.portconnection.knowledgebase.KB;
 
 public class ResponseObject {
 
-    ResponseObject(String status, String exception,  RequestObject endPoint, String portDescription,  KB knowledgeBaseArticle) {
+   public ResponseObject(String status, String exception, RequestObject endPoint, String portDescription, KB knowledgeBaseArticle) {
         setStatus(status);
         setHost(endPoint.getHost());
         setPort(endPoint.getPort());
@@ -28,7 +28,6 @@ public class ResponseObject {
     }
 
     private String portDescription;
-
 
 
     public String getHost() {
@@ -63,11 +62,11 @@ public class ResponseObject {
         this.knowledgeBaseArticle = knowledgeBaseArticle;
     }
 
-    public String getException(){
+    public String getException() {
         return this.exception;
     }
 
-    private void setException(String exception){
+    private void setException(String exception) {
         this.exception = exception;
     }
 }

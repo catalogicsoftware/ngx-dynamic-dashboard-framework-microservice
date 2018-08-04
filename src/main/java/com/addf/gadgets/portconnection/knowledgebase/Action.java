@@ -1,4 +1,4 @@
-package com.addf.backend.service.knowledgebase;
+package com.addf.gadgets.portconnection.knowledgebase;
 
 public class Action {
 
