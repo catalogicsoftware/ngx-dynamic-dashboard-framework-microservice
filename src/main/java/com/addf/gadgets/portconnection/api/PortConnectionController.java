@@ -9,25 +9,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+
 import java.util.List;
 
 @RestController
+@CrossOrigin
 public class PortConnectionController {
     @Value("${connection.timeout}")
     private int connectionTimeout;
 
-
-    @CrossOrigin
     @PostMapping(path = "/connectTest")
     public Flux<ResponseObject> processConnectionTest(@RequestBody List<RequestObject> connectionTestRequest) {
 
-
-        Flux<ResponseObject> portTextFluxResults = Flux.create(sink -> {
+        return Flux.create(sink -> {
             NetworkConnectionTester.testConnection(sink,
-                    connectionTestRequest,  this.connectionTimeout);
+                    connectionTestRequest, this.connectionTimeout);
         });
 
-        return portTextFluxResults;
     }
 
 

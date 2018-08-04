@@ -2,7 +2,6 @@ package com.addf.dashboard.ai.api;
 
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.NaturalLanguageClassifier;
 import com.ibm.watson.developer_cloud.natural_language_classifier.v1.model.Classification;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,12 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
+@CrossOrigin
 public class AIController {
 
-    @Value("${version.number}")
-    private String versionNumber;
-
-    @CrossOrigin
     @RequestMapping("/classify")
     public Classification processWatson(@RequestParam(value = "userid", defaultValue = "data") String userid,
                                         @RequestParam(value = "password", defaultValue = "data") String password,
@@ -31,10 +27,4 @@ public class AIController {
 
 
 
-    @CrossOrigin
-    @RequestMapping("/version")
-    public String getVersion() {
-
-        return this.versionNumber;
-    }
 }
