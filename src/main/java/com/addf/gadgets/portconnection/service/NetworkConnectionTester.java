@@ -156,7 +156,7 @@ public class NetworkConnectionTester {
                 System.out.println("Unable to load kbs: " + e.getMessage());
             }
 
-            return null;
+            return "No description is available at the moment!";
 
         }
 

@@ -1,6 +1,6 @@
-package com.addf.dashboard.ai.api;
+package com.addf.about.api;
 
-import com.google.gson.Gson;
+import com.addf.about.domain.VersionResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-public class DashboardServiceController {
+public class VersionController {
 
     @Value("${version.number}")
     private String versionNumber;
@@ -19,19 +19,3 @@ public class DashboardServiceController {
         return new VersionResponse(this.versionNumber + "");
     }
 }
- class VersionResponse{
-
-     String version;
-     public VersionResponse(String version) {
-         this.version = version;
-     }
-
-     public String getVersion() {
-         return version;
-     }
-
-     public void setVersion(String version) {
-         this.version = version;
-     }
-
- }
