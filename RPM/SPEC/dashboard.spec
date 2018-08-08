@@ -12,7 +12,7 @@
 Name:	        dashboard	
 Version:	%{version}
 Release:	%{build_number}
-Summary:	VADP microserice	
+Summary:	NGX Dynamic Dashboard Framework	
 
 Group:	Applications	
 License: Catalogic Software 	
@@ -25,7 +25,9 @@ BuildArch: noarch
 
 
 %description
-Dashboard microservice
+NGX Dynamic Dashboard Framework
+https://github.com/catalogicsoftware/ngx-dynamic-dashboard-framework
+
 
 %prep
 
