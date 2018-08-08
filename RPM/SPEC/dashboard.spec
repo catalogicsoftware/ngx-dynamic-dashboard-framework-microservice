@@ -5,7 +5,6 @@
 %define debug_package %{nil}
 %define microservice  ngxdd
 
-%define build_number %(basename %{build_dir} )
 %define microservice_jar %(basename $(ls -1 %{build_dir}/target/%{microservice}*.jar| head -n1) )
 
 %define _unpackaged_files_terminate_build 0
