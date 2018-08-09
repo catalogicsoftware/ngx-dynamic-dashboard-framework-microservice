@@ -5,6 +5,8 @@
 %define debug_package %{nil}
 %define microservice  ngxdd
 
+%define service_name  dynamic-dashboard
+
 %define microservice_jar %(basename $(ls -1 %{build_dir}/target/%{microservice}*.jar| head -n1) )
 
 %define _unpackaged_files_terminate_build 0
@@ -40,7 +42,7 @@ mkdir -p ${RPM_BUILD_ROOT}/%{prefix}/lib
 mkdir -p ${RPM_BUILD_ROOT}/lib/systemd/system/
 
 cp -f %{build_dir}/target/%{microservice_jar} ${RPM_BUILD_ROOT}/%{prefix}/lib/%{microservice}.jar
-cp -f %{build_dir}/systemd/dynamic-dashboard.service ${RPM_BUILD_ROOT}/lib/systemd/system/
+cp -f %{build_dir}/systemd/dashboard.service ${RPM_BUILD_ROOT}/lib/systemd/system/%{service_name}.service
 
 %clean
 
@@ -53,7 +55,7 @@ cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distributio
 %files
 %defattr(-,root,root,-)
 %{prefix}/lib/%{microservice}.jar
-/lib/systemd/system/dynamic-dashboard.service
+/lib/systemd/system/%{service_name}.service
 
 %doc
 
@@ -61,9 +63,20 @@ cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distributio
 
 %pre
 
+
 %preun
+if test $1 = 0
+then
+ /usr/bin/systemctl disable %{service_name}
+fi
 
 %postun
+if test $1 -ge 1
+then
+ /usr/bin/systemctl restart %{service_name} >/dev/null 2>&1 || :
+fi
+
+
 
 
 %changelog
