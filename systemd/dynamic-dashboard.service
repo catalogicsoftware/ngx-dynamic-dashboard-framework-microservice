@@ -1,0 +1,23 @@
+[Unit]
+Description=Dynamic Dashboard service 
+After=network.target 
+Documentation=
+
+
+[Service]
+Type=simple
+
+
+ExecStart=/usr/java/latest/bin/java -Dserver.port=8084  -jar /opt/SPP/lib/ngxdd.jar
+
+
+PermissionsStartOnly=true
+Restart=always
+RestartSec=60
+StartLimitInterval=120
+StartLimitBurst=2
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
+

@@ -20,7 +20,7 @@ URL:www.catalogicsoftware.com
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Prefix: /opt/IBM/SPP
+Prefix: /opt/SPP
 BuildArch: noarch 
 
 
@@ -36,9 +36,11 @@ https://github.com/catalogicsoftware/ngx-dynamic-dashboard-framework
 %install
 
 
-mkdir -p ${RPM_BUILD_ROOT}/%{prefix}/bin
+mkdir -p ${RPM_BUILD_ROOT}/%{prefix}/lib
+mkdir -p ${RPM_BUILD_ROOT}/lib/systemd/system/
 
-cp -f %{build_dir}/target/%{microservice_jar} ${RPM_BUILD_ROOT}/%{prefix}/%{microservice}-%{version}.jar
+cp -f %{build_dir}/target/%{microservice_jar} ${RPM_BUILD_ROOT}/%{prefix}/lib/%{microservice}.jar
+cp -f %{build_dir}/systemd/dynamic-dashboard.service ${RPM_BUILD_ROOT}/lib/systemd/system/
 
 %clean
 
@@ -50,7 +52,9 @@ cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distributio
 
 %files
 %defattr(-,root,root,-)
-%{prefix}/%{microservice}-%{version}.jar
+%{prefix}/lib/%{microservice}.jar
+/lib/systemd/system/dynamic-dashboard.service
+
 %doc
 
 %post
