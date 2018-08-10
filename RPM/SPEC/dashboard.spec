@@ -61,6 +61,8 @@ cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distributio
 
 %post
 
+/usr/bin/systemctl enable %{service_name}
+
 %pre
 
 
