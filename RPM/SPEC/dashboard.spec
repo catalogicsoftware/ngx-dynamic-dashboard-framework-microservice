@@ -22,7 +22,7 @@ URL:www.catalogicsoftware.com
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Prefix: /opt/SPP
+Prefix: /opt/ECX/spp
 BuildArch: noarch 
 
 
@@ -38,7 +38,7 @@ https://github.com/catalogicsoftware/ngx-dynamic-dashboard-framework
 %install
 
 
-mkdir -p ${RPM_BUILD_ROOT}/%{prefix}/lib
+mkdir -p ${RPM_BUILD_ROOT}/%{prefix}/public/assets/tool
 mkdir -p ${RPM_BUILD_ROOT}/lib/systemd/system/
 
 cp -f %{build_dir}/target/%{microservice_jar} ${RPM_BUILD_ROOT}/%{prefix}/lib/%{microservice}.jar
@@ -46,7 +46,8 @@ cp -f %{build_dir}/systemd/dashboard.service ${RPM_BUILD_ROOT}/lib/systemd/syste
 
 %clean
 
-mkdir -p %{distribution_dir}
+mkdir -p %{distribution_dir}/tools
+
 cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distribution_dir}/
  [ ${RPM_BUILD_ROOT} != "/" ] && rm -rf ${RPM_BUILD_ROOT}
 
@@ -54,7 +55,7 @@ cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distributio
 
 %files
 %defattr(-,root,root,-)
-%{prefix}/lib/%{microservice}.jar
+%{prefix}/public/assets/tool/%{microservice}.jar
 /lib/systemd/system/%{service_name}.service
 
 %doc
