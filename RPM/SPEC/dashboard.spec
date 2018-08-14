@@ -41,7 +41,7 @@ https://github.com/catalogicsoftware/ngx-dynamic-dashboard-framework
 mkdir -p ${RPM_BUILD_ROOT}/%{prefix}/public/assets/tool
 mkdir -p ${RPM_BUILD_ROOT}/lib/systemd/system/
 
-cp -f %{build_dir}/target/%{microservice_jar} ${RPM_BUILD_ROOT}/%{prefix}/lib/%{microservice}.jar
+cp -f %{build_dir}/target/%{microservice_jar} ${RPM_BUILD_ROOT}/%{prefix}/public/assets/tool/%{microservice}.jar
 cp -f %{build_dir}/systemd/dashboard.service ${RPM_BUILD_ROOT}/lib/systemd/system/%{service_name}.service
 
 %clean
