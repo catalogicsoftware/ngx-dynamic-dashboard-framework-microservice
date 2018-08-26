@@ -22,6 +22,7 @@ public class NetworkConnectionTester {
     private static String REFUSEERROR = "connection-refuse";
     private static String UNKNOWNERROR = "unknown-host";
     private static String ROUTEERROR = "no-route";
+    private static String UNREACHABLE = "unreachable";
     private static String UNDETERMINEDERROR = "undetermined";
 
 
@@ -95,8 +96,11 @@ public class NetworkConnectionTester {
                 return UNKNOWNERROR;
             } else if (exception.contains("route")) {
                 return ROUTEERROR;
+            } else if (exception.contains("reach")) {
+                return UNREACHABLE;
+            } else {
+                return UNDETERMINEDERROR;
             }
-            return UNDETERMINEDERROR;
         }
 
         /**
