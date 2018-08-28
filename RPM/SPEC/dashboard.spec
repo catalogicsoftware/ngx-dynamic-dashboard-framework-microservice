@@ -62,7 +62,6 @@ cp -p %{_topdir}/RPMS/%{buildarch}/%{name}-%{version}-%{release}.* %{distributio
 
 %post
 
-/usr/bin/systemctl enable %{service_name}
 
 %pre
 
@@ -74,10 +73,7 @@ then
 fi
 
 %postun
-if test $1 -ge 1
-then
- /usr/bin/systemctl restart %{service_name} >/dev/null 2>&1 || :
-fi
+
 
 
 
