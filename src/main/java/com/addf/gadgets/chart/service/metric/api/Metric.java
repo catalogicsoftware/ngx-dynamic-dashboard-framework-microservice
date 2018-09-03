@@ -1,10 +1,10 @@
-package com.addf.gadgets.chart.service.memory;
+package com.addf.gadgets.chart.service.metric.api;
 
 import com.addf.gadgets.chart.domain.MetricModel;
 
 import java.util.List;
 
-public interface MemoryMetric {
+public interface Metric {
 
     List<MetricModel> process();
 }

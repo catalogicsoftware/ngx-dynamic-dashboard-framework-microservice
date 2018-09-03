@@ -2,6 +2,7 @@ package com.addf.gadgets.chart.service.memory;
 
 import com.addf.gadgets.chart.domain.MetricModel;
 import com.addf.gadgets.chart.domain.Series;
+import com.addf.gadgets.chart.service.metric.api.Metric;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,35 +16,35 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@Service
-public class MemoryMetricService implements MemoryMetric {
+@Service("memory")
+public class MemoryMetricImpl implements Metric {
 
     private final RestTemplate restTemplate;
 
-    public MemoryMetricService(RestTemplateBuilder restTemplateBuilder) {
+    public MemoryMetricImpl(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
     public List<MetricModel> process() {
 
-        List<MetricModel> data;
+        List<MetricModel> metricData;
 
-        ResponseEntity<String> series1 = getSeries("jvm.memory.committed");
-        ResponseEntity<String> series2 = getSeries("jvm.memory.used");
+        ResponseEntity<String> data1 = getData("jvm.memory.committed");
+        ResponseEntity<String> data2 = getData("jvm.memory.used");
 
-        if (series1.getStatusCode() == HttpStatus.OK && series2.getStatusCode() == HttpStatus.OK) {
+        if (data1.getStatusCode() == HttpStatus.OK && data2.getStatusCode() == HttpStatus.OK) {
 
-            data = new ArrayList<>();
-            data.add(new MetricModel("memory", processResults(series1.getBody(), series2.getBody())));
+            metricData = new ArrayList<>();
+            metricData.add(new MetricModel("memory", getSeriesList(data1.getBody(), data2.getBody())));
 
-            return data;
+            return metricData;
 
         } else {
             return Collections.EMPTY_LIST;
         }
     }
 
-    private ResponseEntity<String> getSeries(String endpoint) {
+    private ResponseEntity<String> getData(String endpoint) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/json");
@@ -52,7 +53,7 @@ public class MemoryMetricService implements MemoryMetric {
         return this.restTemplate.exchange("http://localhost:8080/actuator/metrics/" + endpoint, HttpMethod.GET, entity, String.class);
     }
 
-    private List<Series> processResults(String result1, String result2) {
+    private List<Series> getSeriesList(String result1, String result2) {
 
         //use GSON to parse the json and fill in the Array of series objects
 
