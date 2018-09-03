@@ -59,8 +59,9 @@ public class JobImpl implements Job {
 
         List<JobTaskDetail> data = new ArrayList<>();
 
-        JobTaskDetail detail = new JobTaskDetail();
         for (Map<String, Object> item : jsonData) {
+
+            JobTaskDetail detail = new JobTaskDetail();
 
             detail.setMaster((String) item.get("Master"));
             detail.setJobName((String) item.get("Job Name"));
