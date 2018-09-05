@@ -3,11 +3,8 @@ package com.addf.gadgets.chart.service.job;
 import com.addf.gadgets.chart.service.job.api.Job;
 import com.addf.gadgets.chart.service.job.domain.JobTaskDetail;
 import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
 import java.util.*;
 
 @Service
@@ -18,7 +15,7 @@ public class JobImpl implements Job {
     @Override
     public List<JobTaskDetail> getJobByType(String type) {
 
-        return getData(parseJsonFile(jsonPath), type);
+        return getData(JsonFileData.readFile(jsonPath), type);
 
     }
 
@@ -35,24 +32,7 @@ public class JobImpl implements Job {
             return convert(data);
         }
 
-
         return Collections.EMPTY_LIST;
-    }
-
-    public static DocumentContext parseJsonFile(String jsonPath) {
-
-        try {
-
-            File jsonFile = new File(jsonPath);
-            DocumentContext context = JsonPath.parse(jsonFile);
-
-            return context;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-
     }
 
     public List<JobTaskDetail> convert(List<Map<String, Object>> jsonData) {

@@ -22,7 +22,7 @@ public class JobMetricImpl implements Metric {
 
         metricData = new ArrayList<>();
 
-        List<JobResult> jobResults = getData(JobImpl.parseJsonFile(jsonPath));
+        List<JobResult> jobResults = getData(JsonFileData.readFile(jsonPath));
 
         for(JobResult result :  jobResults){
 
@@ -34,8 +34,6 @@ public class JobMetricImpl implements Metric {
     }
 
     private List<JobResult> getData(DocumentContext jsonContext) {
-
-        //"$..Type" represents the jobTypes within the json document
 
         List<JobResult> jobStats = new ArrayList<JobResult>();
 
