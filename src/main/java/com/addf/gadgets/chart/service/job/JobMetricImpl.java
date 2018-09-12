@@ -66,7 +66,7 @@ public class JobMetricImpl implements Metric {
     private List<Series> getSeriesList(JobResult result){
 
         Series a = new Series();
-        a.setName("total");
+        a.setName("success");
         a.setValue(Double.valueOf(result.getTotal()));
 
         Series b = new Series();

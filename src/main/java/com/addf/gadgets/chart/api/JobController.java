@@ -20,9 +20,10 @@ public class JobController {
     Job job;
 
     @GetMapping(path = "/detail")
-    public List<JobTaskDetail> getMetricData(@RequestParam("detailParam") String jobType) {
+    public List<JobTaskDetail> getMetricData(@RequestParam("detailParam") String jobType,
+                                             @RequestParam("detailMetric") String metric) {
 
-       return job.getJobByType(jobType);
+       return job.getJobByType(jobType, metric);
 
     }
 

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface Job {
 
-     List<JobTaskDetail> getJobByType(String type);
+     List<JobTaskDetail> getJobByType(String type, String metric);
 }

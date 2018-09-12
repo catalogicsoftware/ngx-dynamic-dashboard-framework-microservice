@@ -5,6 +5,7 @@ import com.addf.gadgets.chart.service.job.domain.JobTaskDetail;
 import com.jayway.jsonpath.DocumentContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 @Service
@@ -12,18 +13,33 @@ public class JobImpl implements Job {
 
     @Value("${experimental.data.file}")
     String jsonPath;
-    @Override
-    public List<JobTaskDetail> getJobByType(String type) {
 
-        return getData(JsonFileData.readFile(jsonPath), type);
+    @Override
+    public List<JobTaskDetail> getJobByType(String type, String metric) {
+
+        return getData(JsonFileData.readFile(jsonPath), type, metric);
 
     }
 
-    private List<JobTaskDetail> getData(DocumentContext jsonContext, String type) {
+    private List<JobTaskDetail> getData(DocumentContext jsonContext, String type, String metric) {
         List<Map<String, Object>> data = null;
 
+        String filter = "'";
+
+        switch (metric) {
+            case "all":
+                break;
+            case "success":
+                filter = "' && @.Status == 'Completed'";
+                break;
+            case "failed":
+                filter = "' && @.Status != 'Completed'";
+                break;
+            default:
+        }
+
         try {
-            data = jsonContext.read("$.[*][?(@.Type == '" + type + "')]", List.class);
+            data = jsonContext.read("$.[*][?(@.Type == '" + type + filter +  ")]", List.class);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
