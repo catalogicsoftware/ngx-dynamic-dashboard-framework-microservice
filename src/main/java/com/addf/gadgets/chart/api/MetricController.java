@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-public class MetricRestController {
+public class MetricController {
 
     @Autowired
     @Qualifier("memory")

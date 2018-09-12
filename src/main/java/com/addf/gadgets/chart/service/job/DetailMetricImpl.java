@@ -2,8 +2,9 @@ package com.addf.gadgets.chart.service.job;
 
 import com.addf.gadgets.chart.domain.MetricModel;
 import com.addf.gadgets.chart.domain.Series;
+import com.addf.gadgets.chart.service.job.domain.DetailSummary;
 import com.addf.gadgets.chart.service.metric.api.Metric;
-import com.addf.gadgets.chart.service.job.domain.JobResult;
+import com.addf.gadgets.chart.service.job.domain.DetailSummary;
 import com.jayway.jsonpath.DocumentContext;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service("job")
-public class JobMetricImpl implements Metric {
+public class DetailMetricImpl implements Metric {
     @Value("${experimental.data.file}")
     String jsonPath;
 
@@ -22,20 +23,20 @@ public class JobMetricImpl implements Metric {
 
         metricData = new ArrayList<>();
 
-        List<JobResult> jobResults = getData(JsonFileData.readFile(jsonPath));
+        List<DetailSummary> jobResults = getData(JsonFileData.readFile(jsonPath));
 
-        for(JobResult result :  jobResults){
+        for(DetailSummary result :  jobResults){
 
-            metricData.add(new MetricModel(result.getJobType(), getSeriesList(result)));
+            metricData.add(new MetricModel(result.getType(), getSeriesList(result)));
         }
 
         return metricData;
 
     }
 
-    private List<JobResult> getData(DocumentContext jsonContext) {
+    private List<DetailSummary> getData(DocumentContext jsonContext) {
 
-        List<JobResult> jobStats = new ArrayList<JobResult>();
+        List<DetailSummary> jobStats = new ArrayList<DetailSummary>();
 
         try {
             List<String> data = jsonContext.read("$..Type");
@@ -53,7 +54,7 @@ public class JobMetricImpl implements Metric {
                 List<String> total = jsonContext.read("$.[*][?(@.Type == '" + distinctJobTypeValue + "')]");
                 List<String> success = jsonContext.read("$.[*][?(@.Type == '" + distinctJobTypeValue + "' && @.Status == 'Completed' )]");
 
-                jobStats.add(new JobResult(distinctJobTypeValue, success.size(), total.size()));
+                jobStats.add(new DetailSummary(distinctJobTypeValue, success.size(), total.size()));
             }
 
         } catch (Exception e) {
@@ -63,7 +64,7 @@ public class JobMetricImpl implements Metric {
         return jobStats;
     }
 
-    private List<Series> getSeriesList(JobResult result){
+    private List<Series> getSeriesList(DetailSummary result){
 
         Series a = new Series();
         a.setName("success");

@@ -19,7 +19,6 @@ public class JsonFileData {
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }
-
         }
         return dataFile;
 

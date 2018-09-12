@@ -1,8 +1,9 @@
 package com.addf.gadgets.chart.service.job;
 
-import com.addf.gadgets.chart.api.JobController;
-import com.addf.gadgets.chart.service.job.api.Job;
-import com.addf.gadgets.chart.service.job.domain.JobTaskDetail;
+import com.addf.gadgets.chart.api.DetailController;
+import com.addf.gadgets.chart.api.MetricController;
+import com.addf.gadgets.chart.service.job.api.Detail;
+import com.addf.gadgets.chart.service.job.domain.DetailResource;
 import com.jayway.jsonpath.DocumentContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Link;
@@ -13,19 +14,25 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 import java.util.*;
 
 @Service
-public class JobImpl implements Job {
+public class DetailImpl implements Detail {
 
     @Value("${experimental.data.file}")
     String jsonPath;
 
     @Override
-    public List<JobTaskDetail> getJobByType(String type, String metric) {
+    public List<DetailResource> getByType(String type, String metric) {
 
-        return getData(JsonFileData.readFile(jsonPath), type, metric);
+        return getDataByType(JsonFileData.readFile(jsonPath), type, metric);
+
+    }
+    @Override
+    public List<DetailResource> getById(String jobid) {
+
+        return getDataById(JsonFileData.readFile(jsonPath), jobid);
 
     }
 
-    private List<JobTaskDetail> getData(DocumentContext jsonContext, String type, String metric) {
+    private List<DetailResource> getDataByType(DocumentContext jsonContext, String type, String metric) {
         List<Map<String, Object>> data = null;
 
         String filter = "'";
@@ -55,13 +62,29 @@ public class JobImpl implements Job {
         return Collections.EMPTY_LIST;
     }
 
-    public List<JobTaskDetail> convert(List<Map<String, Object>> jsonData) {
+    private List<DetailResource> getDataById(DocumentContext jsonContext, String id) {
+        List<Map<String, Object>> data = null;
 
-        List<JobTaskDetail> data = new ArrayList<>();
+        try {
+            data = jsonContext.read("$.[*][?(@['Job ID'] == '" + id  + "')]", List.class);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if (data != null) {
+            return convert(data);
+        }
+
+        return Collections.EMPTY_LIST;
+    }
+
+    private List<DetailResource> convert(List<Map<String, Object>> jsonData) {
+
+        List<DetailResource> data = new ArrayList<>();
 
         for (Map<String, Object> item : jsonData) {
 
-            JobTaskDetail detail = new JobTaskDetail();
+            DetailResource detail = new DetailResource();
 
             detail.setMaster((String) item.get("Master"));
             detail.setJobName((String) item.get("Job Name"));
@@ -87,12 +110,16 @@ public class JobImpl implements Job {
         return data;
     }
 
-    public void setHateoasLinks(JobTaskDetail detail, Map<String, Object> item) {
+    private void setHateoasLinks(DetailResource detail, Map<String, Object> item) {
 
-        Link link = linkTo(JobController.class).withRel("detail");
+        //the following link will mimic providing a link to the the root of the application since there is no class request mapping
+        Link link = linkTo(MetricController.class).withRel("up");
         detail.add(link);
 
-        link = linkTo(JobController.class).slash(item.get("Job ID")).withSelfRel();
+        link = linkTo(DetailController.class).withRel("detail");
+        detail.add(link);
+
+        link = linkTo(DetailController.class).slash(item.get("Job ID")).withSelfRel();
         detail.add(link);
 
     }

@@ -1,23 +1,23 @@
 package com.addf.gadgets.chart.service.job.domain;
 
-public class JobResult {
+public class DetailSummary {
 
-    String jobType;
-    int completed;
-    int total;
+    private String type;
+    private int completed;
+    private int total;
 
-    public JobResult(String jobType, int completed, int total) {
-        this.jobType = jobType;
+    public DetailSummary(String type, int completed, int total) {
+        this.type = type;
         this.completed = completed;
         this.total = total;
     }
 
-    public String getJobType() {
-        return jobType;
+    public String getType() {
+        return type;
     }
 
-    public void setJobType(String jobType) {
-        this.jobType = jobType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getCompleted() {

@@ -2,32 +2,32 @@ package com.addf.gadgets.chart.service.job.domain;
 
 import org.springframework.hateoas.ResourceSupport;
 
-public class JobTaskDetail extends ResourceSupport {
+public class DetailResource extends ResourceSupport {
 
-    String master;
-    String jobName;
-    String type;
-    String subType;
-    String jobId;
-    String taskId;
-    String node;
-    String disk;
-    String taskStart;
-    String taskEnd;
-    String status;
-    String state;
-    String elapsed;
-    String dataRate;
-    String files;
-    String failedFile;
-    String media;
-    String secondary;
-    String secondaryVolume;
-    String retention;
-    String expired;
-    String base;
-    String transport;
-    String log;
+   private String master;
+   private String jobName;
+   private String type;
+   private String subType;
+   private String jobId;
+   private String taskId;
+   private String node;
+   private String disk;
+   private String taskStart;
+   private String taskEnd;
+   private String status;
+   private String state;
+   private String elapsed;
+   private String dataRate;
+   private String files;
+   private String failedFile;
+   private String media;
+   private String secondary;
+   private String secondaryVolume;
+   private String retention;
+   private String expired;
+   private String base;
+   private String transport;
+   private String log;
 
 
 
