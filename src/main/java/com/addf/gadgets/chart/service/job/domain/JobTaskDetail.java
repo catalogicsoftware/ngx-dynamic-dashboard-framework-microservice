@@ -1,6 +1,8 @@
 package com.addf.gadgets.chart.service.job.domain;
 
-public class JobTaskDetail {
+import org.springframework.hateoas.ResourceSupport;
+
+public class JobTaskDetail extends ResourceSupport {
 
     String master;
     String jobName;

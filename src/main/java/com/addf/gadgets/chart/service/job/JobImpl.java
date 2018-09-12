@@ -1,10 +1,14 @@
 package com.addf.gadgets.chart.service.job;
 
+import com.addf.gadgets.chart.api.JobController;
 import com.addf.gadgets.chart.service.job.api.Job;
 import com.addf.gadgets.chart.service.job.domain.JobTaskDetail;
 import com.jayway.jsonpath.DocumentContext;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import java.util.*;
 
@@ -39,7 +43,7 @@ public class JobImpl implements Job {
         }
 
         try {
-            data = jsonContext.read("$.[*][?(@.Type == '" + type + filter +  ")]", List.class);
+            data = jsonContext.read("$.[*][?(@.Type == '" + type + filter + ")]", List.class);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -74,11 +78,23 @@ public class JobImpl implements Job {
             detail.setElapsed((String) item.get("Elapsed (seconds)"));
             detail.setDataRate((String) item.get("Data Rate"));
 
+            setHateoasLinks(detail, item);
+
             data.add(detail);
 
         }
 
         return data;
+    }
+
+    public void setHateoasLinks(JobTaskDetail detail, Map<String, Object> item) {
+
+        Link link = linkTo(JobController.class).withRel("detail");
+        detail.add(link);
+
+        link = linkTo(JobController.class).slash(item.get("Job ID")).withSelfRel();
+        detail.add(link);
+
     }
 
 }
