@@ -23,9 +23,8 @@ public class DetailController {
        return detail.getByType(type, metric);
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<DetailResource> getMetricData(@RequestParam("id") String id) {
-
+    @RequestMapping(value= "/{id}", method = RequestMethod.GET)
+    public List<DetailResource> getMetricData(@PathVariable("id") String id) {
         return detail.getById(id);
 
     }
