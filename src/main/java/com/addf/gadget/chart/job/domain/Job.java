@@ -4,31 +4,31 @@ import org.springframework.hateoas.ResourceSupport;
 
 public class Job extends ResourceSupport {
 
-   private String master;
-   private String jobName;
-   private String type;
-   private String subType;
-   private String jobId;
-   private String taskId;
-   private String node;
-   private String disk;
-   private String taskStart;
-   private String taskEnd;
-   private String status;
-   private String state;
-   private String elapsed;
-   private String dataRate;
-   private String files;
-   private String failedFile;
-   private String media;
-   private String secondary;
-   private String secondaryVolume;
-   private String retention;
-   private String expired;
-   private String base;
-   private String transport;
-   private String log;
-
+    private String master;
+    private String jobName;
+    private String type;
+    private String subType;
+    private String jobId;
+    private String taskId;
+    private String node;
+    private String disk;
+    private String taskStart;
+    private String taskEnd;
+    private String status;
+    private String state;
+    private String elapsed;
+    private String dataRate;
+    private String data;
+    private String files;
+    private String failedFile;
+    private String media;
+    private String secondary;
+    private String secondaryVolume;
+    private String retention;
+    private String expired;
+    private String base;
+    private String transport;
+    private String log;
 
 
     public String getMaster() {
@@ -53,6 +53,14 @@ public class Job extends ResourceSupport {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public String getSubType() {
@@ -214,6 +222,7 @@ public class Job extends ResourceSupport {
     public void setLog(String log) {
         this.log = log;
     }
+
     public String getTaskId() {
         return taskId;
     }
@@ -221,7 +230,6 @@ public class Job extends ResourceSupport {
     public void setTaskId(String taskId) {
         this.taskId = taskId;
     }
-
 
 
 }

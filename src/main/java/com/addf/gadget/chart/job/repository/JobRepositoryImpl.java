@@ -99,6 +99,17 @@ public class JobRepositoryImpl implements JobRepository {
             job.setState((String) item.get("State"));
             job.setElapsed((String) item.get("Elapsed (seconds)"));
             job.setDataRate((String) item.get("Data Rate"));
+            job.setData((String) item.get("Data"));
+            job.setFiles((String) item.get("#File"));
+            job.setFailedFile((String) item.get("#Failed Files"));
+            job.setMedia((String) item.get("Media"));
+            job.setSecondary((String) item.get("Secondary"));
+            job.setSecondaryVolume((String) item.get("Secondary Volume"));
+            job.setRetention((String) item.get("Retention"));
+            job.setExpired((String) item.get("Expired"));
+            job.setBase((String) item.get("Base"));
+            job.setTransport((String) item.get("Transport"));
+            job.setLog((String) item.get("Job Log"));
 
             setHateoasLinks(job, item);
 
