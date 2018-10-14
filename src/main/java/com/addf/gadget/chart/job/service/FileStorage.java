@@ -15,7 +15,7 @@ public class FileStorage {
 
         try {
 
-            Path filePath = FileSystems.getDefault().getPath("", "/Users/jhamilton/gitlab/ngx-dynamic-dashboard-framework-microservice/" + fileName);
+            Path filePath = FileSystems.getDefault().getPath("",  fileName);
 
             System.out.println(filePath.getFileName().toString());
 
