@@ -15,7 +15,9 @@ public class FileStorage {
 
         try {
 
-            Path filePath = FileSystems.getDefault().getPath("logs", "data.log");
+            Path filePath = FileSystems.getDefault().getPath("", "/Users/jhamilton/gitlab/ngx-dynamic-dashboard-framework-microservice/" + fileName);
+
+            System.out.println(filePath.getFileName().toString());
 
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {

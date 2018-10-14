@@ -38,18 +38,14 @@ public class JobController {
 
     }
 
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    @GetMapping("/downloadFile")
+    public ResponseEntity<Resource> downloadFile() {
         // Load file as Resource
-        Resource resource = fileStorageService.loadFileAsResource(fileName);
+        Resource resource = fileStorageService.loadFileAsResource("streameddata.csv");
 
         // Try to determine file's content type
         String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
-            System.out.println("Could not determine file type.");
-        }
+
 
         // Fallback to the default content type if type could not be determined
         if (contentType == null) {

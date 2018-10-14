@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.*;
 
 @Repository
@@ -24,6 +26,7 @@ public class JobRepositoryImpl implements JobRepository {
         return getDataByType(JsonFileData.readFile(jsonPath), type, metric);
 
     }
+
     @Override
     public List<Job> getById(String id) {
 
@@ -65,7 +68,7 @@ public class JobRepositoryImpl implements JobRepository {
         List<Map<String, Object>> data = null;
 
         try {
-            data = jsonContext.read("$.[*][?(@['Job ID'] == '" + id  + "')]", List.class);
+            data = jsonContext.read("$.[*][?(@['Job ID'] == '" + id + "')]", List.class);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -116,6 +119,20 @@ public class JobRepositoryImpl implements JobRepository {
             data.add(job);
 
         }
+
+        try (BufferedWriter file = new BufferedWriter(new FileWriter("streameddata.csv"))) {
+
+            for (Job j : data) {
+
+                file.write(j.toString());
+            }
+
+        } catch (Exception e) {
+
+
+            System.out.println("Problem writing file! " + e.getLocalizedMessage() );
+        }
+
 
         return data;
     }

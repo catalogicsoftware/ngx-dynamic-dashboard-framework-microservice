@@ -231,5 +231,35 @@ public class Job extends ResourceSupport {
         this.taskId = taskId;
     }
 
+    @Override
+    public String toString() {
 
+        return  master
+
+                + "," + jobName
+                + "," + type
+                + "," + subType
+                + "," + jobId
+                + "," + taskId
+                + "," + node
+                + "," + disk
+                + "," + taskStart
+                + "," + taskEnd
+                + "," + status
+                + "," + state
+                + "," + elapsed
+                + "," + dataRate
+                + "," + data
+                + "," + files
+                + "," + failedFile
+                + "," + media
+                + "," + secondary
+                + "," + secondaryVolume
+                + "," + retention
+                + "," + expired
+                + "," + base
+                + "," + transport
+                + "," + log + "\n";
+
+    }
 }
